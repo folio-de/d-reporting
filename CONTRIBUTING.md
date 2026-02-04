@@ -1,216 +1,116 @@
-Beiträge
-============
-
-Wir freuen uns jederzeit über Einreichungen von SQL-Statements für neue 
-Statistikabfragen (report queries), Abfragen für abgeleiteten Tabellen 
-(derived tabeles) sowie für Fehlerbehebungen. Soweit es zeitlich möglich ist,
-werden alle Einsendungen berücksichtigt. Bitte haben Sie Geduld, es kann 
-einige Zeit dauern, bis entschieden wird, ob ein Pull Request angenommen wird.
-
-Befolgen Sie bitte diese Richtlinien, wenn Sie eine Pull-Anfrage erstellen.
-
-##### Inhalt
-1\. [Neue Beitragende](#1-Neue-Beitragende)  
-2\. [Commits und Pull-Anfragen](#2-Commits-und-Pull-Anfragen)  
-3\. [Überprüfung des Codes](#3-Ueberpruefung-des-Codes)  
-4\. [Dokumentation](#4-Dokumentation)  
-5\. [Testen](#5-testen)  
-6\. [Derived tables / abgeleitete Tabellen](#6-derived-tables)  
-7\. [Formatierung von SQL](#7-Formatierung-von-SQL)  
-8\. [Benennen](#8-Benennen)  
-9\. [Checkliste](#9-Checkliste)
-
-
-1\. Neue Beitragende
+Contributing
 --------------------
 
-Bevor Sie mit der Erstellung eines Beitrags beginnen, empfehlen wir Ihnen, 
-diesen im Vorfeld mit der Community zu besprechen. Dadurch haben Sie die 
-Möglichkeit, Feedback zu erhalten, das Ihnen Zeit sparen kann.
+[![de](https://img.shields.io/badge/lang-de-blue.svg)](CONTRIBUTING.de.md)
 
-Die meisten Beitragenden nutzen hierfür den internationalen #reporting-lab 
-channel in FOLIO Slack. Die deutsche Community erreichen Sie über den 
-#d-reporting Channel in FOLIO Slack.
+We appreciate submissions of new statistics queries at any time. All submissions will be considered as time allows. We ask your patience; it may require considerable time to decide whether a pull request will be accepted.
 
-Alternativ können Sie auch gerne Fragen direkt in Github stellen. 
-Allgemeine Fragen können Sie hier stellen: [Discussions]
-(https://github.com/folio-org/folio-analytics/discussions)
-Fehler oder spezifische technische Vorschläge können Sie hier einbringen:
-[Issues](https://github.com/folio-org/folio-analytics/issues).
+Please follow these guidelines when preparing a pull request.
+
+##### Contents
+1\. [New contributors](#1-New-contributors)  
+2\. [Contributing](#2-Contributing)  
+2.1\. [Commits and pull requests](#21-Commits-and-pull-requests)  
+2.2\. [Documentation](#22-Documentation)  
+2.3\. [Testing](#23-Testing)  
+2.4\. [Formatting SQL](#24-Formatting-SQL)  
+2.5\. [Naming things](#25-Naming-things)  
+3\. [Code review](#3-Code-review)  
+4\. [Changelog](#4-Changelog)
+
+1\. New contributors
+--------------------
+
+Before beginning work on a contribution, we recommend that you ask the community in advance about the work you propose to do. They may have feedback that would save you time. Please use FOLIO's Slack channel #d-reporting for this purpose. 
+
+You can submit error reports or specific technical suggestions at [Issues](https://github.com/folio-de/d-reporting/issues).
 
 
-2\. Commits und Pull-Anfragen
+2\. Contributing
 -----------------------------
 
-### Änderungen vornehmen
 
-Alle Commits sollten nicht in diesem Repository, sonder in einem "forked" 
-Repository vorgenommen werden.
+2.1\. Commits and pull requests
+-----------------------------
 
-Es ist **eindringlich empfohlen** zunächst einen Unterbereich zum 
-"Hauptbereich" zu erstellen, sodass Commits nicht direkt im Hauptbereich 
-durchgeführt werden. 
+**1. Create fork**
 
-**Pull requests werden zusammengeführt. Daher sollte der Unterbereich 
-für die Pull requests nach dem Zusammenführen verworfen oder nicht 
-wiederverwendet werden, um Verwechslung zu vermeiden.** Wenn der 
-'Hauptbereich' für Pull requests verwendet wird, sollte das Repository 
-nach der Zusammenführung der Bereiche "re-forked" werden. 
+All commits should be made in a “forked” repository, not in this repository.
 
-Da der gesamte Pull Request in einem einzigen Commit zusammengefasst wird, 
-ist es ratsam, den Umfang der Anfrage einzugrenzen und vorzugsweise nur ein 
-einziges Problem abzufragen.
+**2. Branching**
 
+It is strongly recommended to create a new branch in the “forked” repository so that commits are not made directly in the main branch. This means that, if possible, a separate branch should be created for each contribution.
 
-### Commit Beschreibung
+Pull requests are merged. Therefore, the branches for pull requests should be deleted or not reused after merging to avoid confusion. If the main branch is used for a pull request, it is a good idea to re-fork the repository after the merge. 
 
-Laut dem Git Referenzhandbuch (git reference manual) werden Git commits
-mit einem kurzen, einzeiligen Titel dokumentiert, der die Änderungen 
-zusammenfasst. Darauf folgt eine ausführliche Beschreibung. 
-Der Titel sollte nicht länger als 75 Zeichen sein. Es ist wichtig, 
-dass der Titel aussagekräftige ist, sodass der Verlauf in Git lesbar ist. 
-Hyperlinks oder andere Verweise wie "Fixes #" können in der ausführlichen 
-Beschreibung enthalten sein, sollten aber nicht im Titel stehen und sollten 
-kein Ersatz für eine vollständige Beschreibung der Änderung sein. 
+**3. Pull Request**
+
+It is recommended to keep the scope of the pull request relatively narrow, preferrably addressing only a single issue.
+
+Quoting roughly from the Git Reference Manual, Git commits are documented with a short, one-line title which summarizes the changes, followed by a more thorough, long description. The title should be no more than 75 characters. It is important that at least the title be filled in with a meaningful summary so that the Git history will be readable. Hyperlinks or other references such as "Fixes #" may be included in the long description, but not in the title and not as a substitute for a complete description of the changes.
 
 
-### CHANGES.md
-
-Die Datei CHANGES.md sollte mit Releasenotes aktualisiert werden, 
-die die in der Pull-Anfrage vorgenommenen Änderungen beschreiben.
-Dabei sollte es sich um eine in sich eigenständige, textliche 
-Zusammenfassung der Änderungen handeln und nicht um einen Link.
-
-
-
-3\. Überprüfung des Codes (Review)
----------------
-
-Ein Pull Request wird von mindestens zwei anderen Personen als dem 
-Beitragenden geprüft, bevor er zusammengeführt werden kann.
-
-Wenn ein Prüfer vorschlägt, die Änderungen um zusätzliche Funktionen zu 
-erweitern, müssen diese Änderungen nicht im aktuellen Pull Request 
-behandelt werden, sondern können in einem separaten, neuen Pull Request 
-behandelt werden.
-
-Im Folgenden finden Sie eine empfohlene Checkliste für Code Reviews.
-
-
-4\. Dokumentation
+2.2\. Documentation
 -----------------
 
-Bei Ergänzungen oder Änderungen von Abfragen sollten die entsprechenden 
-Ergänzungen oder Änderungen auch in der Benutzerdokumentation ergänzt werden, 
-und zwar im selben Pull Request.
+Each query requires user documentation. The user documentation should contain the following three sections: 
 
-Die Benutzerdokumentation sollte folgende drei Bereiche enthalten: 
+* Purpose 
+* Sample output 
+* Query instructions, e.g. how to set parameters
 
-* Zweck der Meldung
-* Beispiel für die Ausgabe 
-* Anweisungen zur Abfrage, z.B. wie man Parameter einstellt
+Additions or changes to queries should be accompanied by the corresponding additions or changes to user documentation, together in the same pull request.
 
 
-5\. Testen
+2.3\. Testing
 -----------
 
-Alle Abfragen oder Änderungen an Abfragen sollten mit einer LDP-Datenbank getestet werden, 
-bevor sie in einem Pull request eingefügt werden. Derzeit verfügen wir noch nicht über 
-Testdaten, die umfangreiche automatisierte Tests ermöglicht.
+All queries or changes to queries should be tested before they are submitted in a pull request. We do not currently have a test data set to allow significant automated testing.
 
 
-6\. Derived tables / abgeleitete Tabellen
+2.4\. Formatting SQL
 ------------------
 
-Bei Ergänzungen oder Änderungen an derived tables sollten die entsprechenden 
-Ergänzungen oder Änderungen auch in der Datei `runlist.txt` nachvollzogen werden, 
-und zwar im selben Pull Request.
-
-Abfragen zu derived tables für Metadb sollten ebenfalls alle relevanten externen 
-SQL-Direktiven enthalten, insbesondere:
-
-```
---metadb:table <table>
-```
+Formatting rules are in place to ensure a consistent appearance for SQL queries. These formatting rules can be found under QUERIES.md in the repository.
 
 
-7\. SQL formatieren
-------------------
-
-Wir nutzen das Tool `pg_format` von 
-[pgFormatter](https://github.com/darold/pgFormatter), um den SQL-Code lesbarer 
-zu gestalten. Um maximale Konsistenz zu gewährleisten, wurde eine [Konfigurations-Datei]
-(https://github.com/folio-org/folio-analytics/blob/main/sql/pg_format.conf)
-zur Verfügung gestellt. Die Konfigurations-Datei sollte als `~/.pg_format` 
-kopiert werden.
-
-Bitte verwenden Sie diese Methode zur Formatierung des vorgeschlagenen Codes.
-
-Beachten Sie, dass `pg_format` bekannte Probleme hat, insbesondere bei 
-[Formatierung CTEs](https://github.com/darold/pgFormatter/issues/213). 
-In diesem Fall wird eine manuelle Formatierung bevorzugt.
-
-
-8\. Dinge benennen
+2.5\. Naming things
 -----------------
 
-Die Namen von Tabellen und Spalten sind in Kleinbuchstaben zu schreiben 
-und durch Unterstriche ( `_` ) zu trennen. Doppelte Unterstriche ( `__` ) 
-sollten vermieden werden, da sie in der Metadb als spezielle Indikatoren 
-verwendet werden.
+Names of tables and columns should be in lowercase and use underscores ( _ ) to separate words. Double underscores ( `__` ) should be avoided, as they are used as special indicators in the Metadb, for example.
 
-In dem seltenen Fall, dass ein Spaltenname sowohl mit einem reservierten Wort 
-identisch ist als auch ohne Tabellen- oder Alias-Präfix allein steht, muss er 
-in Anführungszeichen ( `"` ) gesetzt werden. Davon abgesehen ist es besser, 
-keine Anführungszeichen zu verwenden. 
-
-Bei derived tables folgen die Tabellennamen nicht einem rein mechanischen Muster, 
-was dazu führen kann, dass einige Namen unpraktisch lang sind.
-Der Schema-/Tabellenname der ersten nach `FROM` aufgeführten Tabelle wird 
-normalerweise als Präfix für den abgeleiteten Tabellennamen verwendet, zum Beispiel
-`instance_` or `item_`. Hinzu kommt oft ein Suffix, das auf die wichtigste 
-Tabellenverbindung hinweist, oder `ext` für allgemeine Erweiterungen der Daten. 
-Insgesamt ist es hilfreich, sich Gedanken darüber zu machen, wie man die 
-abgeleitete Tabelle kurz und knapp beschreiben kann.
+In the rare case where a column name is both the same as a reserved word and stands alone without a table or alias prefix, it must be enclosed in quotation marks ( " ). Apart from these cases, it is better not to use quotation marks.
 
 
-9\. Checkliste
--------------
+3\. Code review
+---------------
 
-Die unten aufgeführte Checkliste kann als Leitfaden für die eigene Überprüfung 
-eines Pull Requests (PR) verwendet werden. Eine Kopie der Liste kann als Kommentar
-an einem Review/einer Überprüfung beigefügt werden. Kreuzen Sie dazu die Punkte
-in der Checkliste an, die in Ihrer Überprüfung bestätigt wurden, indem Sie 
-in jeder Zeile ein `x` zwischen den eckigen Klammern `[]` setzen.
+A pull request is reviewed by at least one person other than the contributor before it can be merged.
 
-Wenn einige Punkte nicht angekreuzt sind oder Sie weitere Fragen haben, können Sie 
-dies ebenfalls in einem Kommentar angeben und "Request changes" (Änderungen beantragen) 
-bei der Überprüfung wählen.
+If a review suggests expanding the scope of the changes to include additional functionality, those changes do not have to be addressed in the current pull request but may be handled in a separate, new pull request.
+
+The checklist below can be used to guide your review of a pull request (PR). A copy of the checklist may be added to a comment attached to a review. Check off the items that have been confirmed in your review by adding an x between the square brackets [] on each line.
+
+If any items remain unchecked or you have further questions, you can indicate that in the comment as well and select "Request changes" as the review response.
 
 ```
-Alle Abfragen:
-- [ ] Titel und Beschreibung des PR sind präzise und vollständig
-- [ ] PR steht in einem neuen Unterbereich (nicht im Hauptbereich)
-- [ ] PR ist nicht zu umfangreich
-- [ ] Die Abfrage läuft ohne Fehler
-- [ ] Die Ausgabe der Abfrage ist korrekt
-- [ ] Die Abfragelogik ist klar und gut dokumentiert
-- [ ] Die Abfrage ist lesbar und richtig eingerückt
-- [ ] Tabellen- und Spaltennamen werden in Kleinbuchstaben geschrieben
-- [ ] Anführungszeichen werden nur verwendet, wenn dies erforderlich ist
-- [ ] Auszug von JSON hat die Standardform, zum Beispiel:
-      LDP:     t #>> '{f1,f2,f3}'    [für Kompatibilität zwischen LDP 1 & 2]
-      Metadb:  jsonb_extract_path_text(t, f1, f2, f3)
-
-Bericht zur Abfrage:
-- [ ] Die Abfrage hat eine vollständige Benutzerdokumentation
-    - [ ] Zweck der Meldung
-    - [ ] Beispiel für die Ausgabe
-    - [ ] Anweisungen zur Abfrage, z.B. wie man Parameter einstellt
-
-
-Derived tables/abgeleitete Tabellen:
-- [ ] Erste Zeile ist die Anweisung  "--metadb:table", gefolgt von einer Leerzeile
-- [ ] Benutzerdokumentation in Kommentarzeilen, gefolgt von Leerzeilen
-- [ ] Der Dateiname wird in `runlist.txt` nach den Abhängigkeiten aufgeführt
+- [ ] PR Title and Description are accurate and thorough
+- [ ] PR is based on a new branch (not main)
+- [ ] PR scope is not overly broad
+- [ ] Query runs without errors
+- [ ] Query output is correct
+- [ ] Query logic is clear and well documented
+- [ ] Query is readable and properly indented (formatting rules)
+- [ ] Table and column names are in all-lowercase
+- [ ] Quotation marks are used only where necessary
+- [ ] Query has complete user documentation
+    - [ ] Purpose
+    - [ ] Sample output
+    - [ ] Query instructions
 ```
+
+
+4\. Changelog
+-----------------------------
+
+The CHANGES.md file is used as a changelog. With each release, the release notes are updated to describe the changes made in the pull requests. TThis should be a self-contained, textual summary of the changes, rather than a hyperlink to an issue.
