@@ -7,16 +7,16 @@ This document describes techniques for creating, understanding, and revising SQL
 
 **Contents**
 
-1\. [SQL Style](#1-SQL-Style) 
-1.2\. [Spacing and indentation](#12-spacing-and-indentation) 
-1.3\. [Keywords](#13-Keywords) 
-1.4\. [Blank lines](#14-Blank-lines) 
-1.5\. [Type conversion](#15-Type-conversion) 
-1.6\. [Comments](#16-Comments) 
-1.7\. [File name](#17-File name) 
-2\. [Structuring a query](#2-Structuring-a-query) 
-3\. [Specific strategies](#3-Specific-strategies) 
-4\. [Accommodating Redshift](#4-Accommodating-Redshift) 
+1\. [SQL Style](#1-sql-style)  
+1.2\. [Spacing and indentation](#12-spacing-and-indentation)  
+1.3\. [Keywords](#13-keywords)  
+1.4\. [Blank lines](#14-blank-lines)  
+1.5\. [Type conversion](#15-type-conversion)  
+1.6\. [Comments](#16-comments)  
+1.7\. [File name](#17-file-name)  
+2\. [Structuring a query](#2-structuring-a-query)  
+3\. [Specific strategies](#3-specific-strategies)  
+4\. [Accommodating Redshift](#4-accommodating-redshift) 
 
 
 1\. SQL Style
