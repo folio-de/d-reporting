@@ -5,15 +5,15 @@ Dieses Dokument beschreibt Techniken für das Erstellen, Verstehen und Überarbe
 
 **Inhalt**
 
-1\. [SQL Style](#1-SQL-Style) 
-1.2\. [Abstände und Einrückungen](#12-Abstaende-und-Einrueckungen) 
-1.3\. [Schlüsselwörter](#13-Schluesselwoerter) 
-1.4\. [Leerzeilen](#14-Leerzeilen) 
-1.5\. [Typkonvertierung](#15-Typkonvertierung) 
-1.6\. [Kommentare](#16-Kommentare) 
-1.7\. [Dateiname](#17-Dateiname) 
-2\. [Strukturierung einer Abfrage](#2-Strukturierung-einer-Abfrage) 
-3\. [Spezifische Strategien](#3-Spezifische-Strategien) 
+1\. [SQL Style](#1-SQL-Style)  
+1.2\. [Abstände und Einrückungen](#12-Abstaende-und-Einrueckungen)  
+1.3\. [Schlüsselwörter](#13-Schluesselwoerter)  
+1.4\. [Leerzeilen](#14-Leerzeilen)  
+1.5\. [Typkonvertierung](#15-Typkonvertierung)  
+1.6\. [Kommentare](#16-Kommentare)  
+1.7\. [Dateiname](#17-Dateiname)  
+2\. [Strukturierung einer Abfrage](#2-Strukturierung-einer-Abfrage)  
+3\. [Spezifische Strategien](#3-Spezifische-Strategien)  
 4\. [Kompatibilität Redshift](#4-Kompatibilität-Redshift) 
 
 
