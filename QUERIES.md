@@ -1,211 +1,176 @@
-Abfragen schreiben
-=============
-Dieses Dokument beschreibt Techniken für das Erstellen, Verstehen,
-und Überarbeiten von LDP-basierten Abfragen.
+Query Writing
+--------------------
+
+[![de](https://img.shields.io/badge/lang-de-blue.svg)](QUERIES.de.md)
+
+This document describes techniques for creating, understanding, and revising SQL queries.
+
+**Contents**
+
+1\. [SQL Style](#1-SQL-Style) 
+1.2\. [Spacing and indentation](#12-spacing-and-indentation) 
+1.3\. [Keywords](#13-Keywords) 
+1.4\. [Blank lines](#14-Blank-lines) 
+1.5\. [Type conversion](#15-Type-conversion) 
+1.6\. [Comments](#16-Comments) 
+1.7\. [File name](#17-File name) 
+2\. [Structuring a query](#2-Structuring-a-query) 
+3\. [Specific strategies](#3-Specific-strategies) 
+4\. [Accommodating Redshift](#4-Accommodating-Redshift) 
 
 
-SQL Style
----------
-
-* Abstände/Einrückungen
-	* vier Leerzeichen für Einzüge
-
-   ```
-   Beispiele einschließen
-
-   ```
-
-   * wenn mehr als 3 Elemente aufgelistet werden, wird jedes 
-     in eine neue Zeile gesetzt
-     (einschließlich des ersten)
-
-   ```
-   SELECT 
-       sp.name AS service_point_name,
-       m.name AS material_type,
-       i.barcode AS item_barcode,
-       ...
-   ```
-
-   * alternativ: das erste Elemente in derselben wird in der
-     Zeile belassen, die übrigen Elemente werden an der Stelle des 
-     ersten Elements eingerückt
-
-   ```
-   SELECT sp.name AS service_point_name,
-          m.name AS material_type,
-          i.barcode AS item_barcode,
-          ...
-   ```
-   
-   * gibt es parallele Ausdrücke, können gleiche Abstände 
-     verwendet werden, um ähnliche Elemente auszurichten
-
-   ```
-   loan_date BETWEEN (SELECT start_date FROM parameters) AND
-                     (SELECT end_date FROM parameters)
-   ```
-
-* Schlüsselwörter
-	* in Großbuchstaben schreiben, z.B.:
-		* `SELECT`
-		* `'2019-01-01' :: DATE`
-	* immer `AS` für Aliasing verwenden (Spalten, Unterabfragen, 
-	  Tabellen, etc.)
-* Leerzeilen
-	* Keine Leerzeilen verwenden
-* Zeichensetzung
-	* `,` Am Ende einer Zeile
-	* `(` Am Ende einer Zeile
-	* `)` am Anfang einer Zeile, aufgereiht mit Schlüsselwort aus
-          einer Zeile mit (
-* Typkonvertierung
-	* nutze immer `' :: '` gefolgt vom Datentyo in Großbuchstaben
-	  (z.B., `VARCHAR`, `DATE`)
-* Kommentare
-	* `/* ... */` für mehrzeilige Kommentare
-	* `--` für einzeilige Kommentare
-* Dateiname
-	* nutze Unterstriche, keine Bindestrichen
-* Felder auswählen / selecting 
-	* Nutze kein `SELECT *`. Führe alle Felder explizit auf. 
-	* (join kann sich auf die gesamte Tabelle beziehen, es werden
-	  keine Unterabfragen benötigt, um die richtige Tabelle mit join
-	  einzuschränken) 
-
-Strukturierung einer Abfrage
--------------------
-
-1. Kopfzeile
-	* Letztes Änderungsdatum? Aktuell ab?
-	* Angeforderte Felder im Output, in der gewünschten Reihenfolge
-	* Gibt es Filter?
-	* Aggregiert oder nicht? (Wie?)
-	* Gibt es weiteren notwendigen Kontext, um die Abfrage zu verstehen?
-	* Warnung, falls die Abfrage mehr als 1 Million Zeilen (Excel) ergeben könnte?
-	* Nutze diese Kopfzeile als Vorlage in der Dokumentation.
-2. Parameter (`WITH` Statements verwenden)
-	* Parameter am Anfang der Datei platzieren, um es anderen zu erleichtern, 
-	  sie zu ändern
-	* Den Name immer als "Parameter" verwenden
-	* Verwendung von Parameterfeldnamen vermeiden, die zu Dubletten von LDP-Feldnamen
-	  führen, wenn möglich
-	* Standardparameterwerte so festlegen, dass garantiert wird, dass die Abfrage 
-	  garantiert Ergebnisse bringt, sowohl für Tests als auch zur Bestätigung der 
-	  Benutzer, die die Abfrage machen
-		* Wenn nach einem Datumsbereich gefiltert wird, einen sehr großen
-		  Standarddatumsbereich (über 10 Jahre) verwenden, auch wenn diese 
-		  Abfrage typischerweise für ein einzelnes Jahr verwendet wird
-		* Wenn nach einem Wert in einem bestimmten Feld gefiltert wird 
-		  (z. B. einem bestimmten Servicepunkt), in Betracht ziehen, den
-		  häufigsten Wert zu verwenden
-3. Zusätzliche `WITH`-Statements zur Kennzeichnung von Unterabfragen (siehe z.B.
-   services\_usage Abfrage) - optional
-4. Hauptabfrage
+1\. SQL Style
+--------------------
 
 
-Details zu spezifischen Strategien
-------------------------------
+1.2\. Spacing and indentation
+--------------------
 
-* `WITH`-Statements
-	* `WITH` kann genutzt werden, um zu Beginn der Abfrage temporäre Tabellen 
-	  zu erstellen, die dann später verwendet werden können. 
-	* Die letzte `WITH`-Anweisung geht direkt in die primäre `SELECT`-
-	  Anweisung für die Abfrage. Es wird kein Komma nach dem letzten
-	  `WITH`-Statement benötigt. 
-	* In `WITH`-Anweisungen können Spaltennamen vor der `SELECT`-
-	  Anweisung angegeben werden. Der Code ist besser lesbar, wenn
-	  die Spalten mit `AS` angegeben werden, anstatt direkt im `SELECT`-
-	  Statement (siehe services\_usage query)
-	* [Artikel zu SQL mit WITH-Anweisungen]
-	  (https://modern-sql.com/feature/with)
-	* [Verwendung von WITH-Statements zur Erstellung von Literate
-	  SQL](https://modern-sql.com/use-case/literate-sql)
-* Abfangen von Leerstrings und Nullwerten
-	* Wenn nur eine Spalte ausgewählt wird, die einen Nullwert haben 
-	  könnte, muss nicht besonders vorgegangen werden. 
-	* Wenn die Spalte in irgendeiner Weise umgewandelt wird, z.B. in 
-	  einer mathematischen Berechnung oder wenn ein Tel des Wertes
-	  extrahiert wird, muss auf einen Nullwert oder eine leere 
-	  Zeichenkette getestet werden
-	* Eine Möglichkeit ist die Nutzung von `COALESCE`, mit der ein 
-	  Standardwert angegeben werden kann, wenn das Ergebnis null ist
-* Auswahl der Tabelle, aus der zuerst ausgewählt werden soll 
-	* Beim Schreiben einer Abfrage ist es wichtig, dass im Voraus 
-	  überlegt wird, wechel Tabelle mit `SELECT` zuerst aufgelistet 
-	  wird, da die Verknüpfungen mit `JOIN` darauf aufbauen 
-	* Es sollte mit der Tabelle gestartet werden, die am besten 
-	  repräsentiert, was in den Zeilen in der Ergebnistabelle ausgegeben
- 	  werden soll 
-		* Wenn eine Tabelle der Ausleihen ausgegeben werden soll, 
-	  	  sollte mit der Ausleihtabelle gestartet werden
+4 spaces are used for indents.
+
+```
+SELECT 
+    column
+FROM
+    table
+```
+
+* Each element is placed on a new line.
+
+```
+SELECT 
+    sp.name AS service_point_name,
+    m.name AS material_type,
+    i.barcode AS item_barcode,
+    ...
+```
+
+* If there are parallel expressions, equal spacing can be used to align similar elements.
+
+```
+    loan_date BETWEEN (SELECT start_date FROM parameters) AND
+                      (SELECT end_date FROM parameters) 
+```
+
+
+1.3\. Keywords
+--------------------
+
+Keywords should be written in capital letters, e.g.:
+
+* `SELECT`
+* `'2019-01-01' :: DATE`
+* Always use `AS` for aliasing (columns, subqueries, tables, etc.)
+
+
+1.4\. Blank lines
+--------------------
+
+No blank lines are used.
+
+
+1.5\. Type conversion
+--------------------
+
+If a type conversion is necessary, `‘ :: ’` followed by the data type in uppercase letters is always used, e.g., `VARCHAR` or `DATE`.
+
+
+1.6\. Comments
+--------------------
+
+* `/* ... */` for multi-line comments
+* `--` for single line comments
+
+
+1.7\. File name
+--------------------
+
+Underscores are used for delimitation, not dashes.
+
+
+2\. Structuring a query
+--------------------
+
+1. header 
+
+Please add the following header to each query and adjust the following points.
+
+* File name
+* Author
+* Description
+
+If a query is modified and reused, `Modification` is added below `Author` with your own personal details.
+
+```
+/*
+-------------------------------------------------------------------------------
+File name
+
+Author:         John Doe <jd@example.org>
+Description:    Brief description of the purpose.
+-------------------------------------------------------------------------------
+Copyright 2026 The Open Library Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-------------------------------------------------------------------------------
+*/
+```
+
+2. Performance warnings
+
+Write a warning in `Description` if the query could return more than 1 million rows (Excel) or if processing requires a lot of resources.
+
+3. Parameter
+
+* Parameters are defined within a CTE (using `WITH` statements).
+* Place parameters at the beginning of the file to make it easier for others to change them.
+* Set default parameter values to ensure that the query returns results. If necessary, use default values or a logical OR (e.g., with 1=1).
+
+4. Subqueries are created as additional `WITH` statements.
+
+5. Primary query
+
+
+3\. Specific strategies
+--------------------
+
+* Intercepting empty strings and null values
+    * If **only one column** is selected that could have a NULL value, no special action is required. 
+    * If the column is converted in any way, e.g., in a mathematical calculation or if part of the value is extracted, it must be tested for a NULL value or an empty string. One option is to use `COALESCE`, which can be used to specify a default value if the result is NULL.
+* Picking which table to select from first.
+    * When writing a query, it's important to think through which table you list first in the `SELECT` statement because of the joins that will build on it.
+    * Start with the table that best represents what you want on each line of the results table. This improves performance.
 * `LEFT JOIN` vs. `INNER JOIN`
-	*  Im Allgemeinen stellt die Verwendung von `LEFT JOIN` sicher,
-	  dass Elemente nicht aus Versehen verloren werden, die am 
-	  interessantesten sind
-		* Wenn z.B. Interesse an den Ausleihen besteht und auch die
-		  demographischen Daten der Nutzer, die die Ausleihen getätigt 
-	  	  haben, angezeigt werden sollen, kann `LEFT JOIN` genutzt werden
-		  um alle Ausleihen anzuzeigen, auch wenn die demographischen 
-		  Angaben der Nutzer nicht bekannt sind
-	* Wenn eine Tabelle auf Grundlage eines Feldes in einer sekundären Tabelle
-	  gefiltert wird, sollte stattdessen ÌNNER JOIN` verwendet werden, um 
-	  sicherzustellen, dass Datensätze ausgeschlossen werden, die nicht den
-	  den erforderlichen Wert beinhalten
+    * In general, using `LEFT JOIN` makes sure you don't accidentally lose the items you're most interested.
+        * For example, if you're interested in loans and also want to see the demographics of the users making the loan, you can use `LEFT JOIN` to keep all loans even if you don't know the user's demographics.
+    * If you are filtering a table based on a field in a secondary table, you may instead want to use INNER JOIN to make sure to exclude records that don't have the required value.
 * `BETWEEN`
-	* Wichtig: Die Verwendung von `BETWEEN` ist riskant für Datumsangaben, 
-	  da nur Datensätze bis Mitternacht des Enddatums eingeschlossen werden
-	  (Im Wesentlichen das Ende des Vortags, aber es werden auch Elemente
-	  genau um Mitternacht des Enddatums mit eingeschlossen)
-	* Wenn `BETWEEN` verwendet wird, sollten andere in den Kommentaren über 
-	  das Verhalten bei Datumsangaben aufgeklärt werden. Zudem sollten
-	  Standardwerte gesetzt werden, die für das Verhalten sinnvoll sind 
-	  (z.B., der erste Tag eines Jahres und der erste Tag des folgenden 
-	  Jahres, anstatt der letzte Tag des Jahres)
-	* Wenn nicht riskiert werden soll, dass Werte ab Mitternacht des Enddatums 
-	  einbezogen werden, kann `>= start_date` and `< end_date` anstatt von
-	  `BETWEEN` gentutzt werden. Dies entspricht der Verwendung von `BETWEEN` 
-	  mit dem Unterschied, dass `<` anstelle von `<=` verwendet wird. Dabei 
-	  muss immer noch ein Enddatum genommen werden, das nicht in den Datumsbereich
-	  eingezogen wird (der Tag nach dem letzten Tag, den eingeschlossen werden soll)
-	* [Stapelabfrage zwischen Datumsbereichen]
-	  (https://stackoverflow.com/questions/23335970/postgresql-query-between-date-ranges)
-* DRY - Don't Repeat Yourself (Wiederholen Sie sich nicht) 
-	* Wie bei jeder Programmierung gilt: Je mehr Wiederholungen es in einer 
-	  Abfrage gibt, desto wahrscheinlicher ist es, dass beim Aktualisieren
-	  etwas vergessen wird oder ein Fehler zum zweiten Mahl gemacht wird
-	* Es sollten Wege gefunden werden, Teile von Abfragen kreativ 
-	  wiederzuverwenden, entweder mit Parametern oder mit `WITH`-Statements 
+    * Note that using `BETWEEN` for dates is risky because it only includes records up to midnight of the end date (essentially, the end of the day before, but it will include items exactly at midnight of the end date).
+    * If you do use `BETWEEN`, try to educate people about its behavior in comments and set default values that make sense for the behavior (e.g., the first day of one year and the first day of the following year, instead of the last day of the year).
+    * If you do not want to risk including values from midnight of the end date, you can use `>= start_date` and `< end_date` instead of `BETWEEN`. This is like using `BETWEEN` except that you use `<` instead of `<=`. You still have to use an end date that will not be included in the date range (i.e., the day after the last day you want included).
+* DRY - Don't Repeat Yourself
+    * As with any programming, the more repetition you have in your query, the more likely you are to forget to update something or make a mistake the second time around.
+    * Try to find a way to reuse parts of your query creatively, either with parameters or `WITH` statements.
 
 
-Anpassung an Redshift
-----------------------
+4\. Accommodating Redshift
+--------------------
 
-* Allgemeine Hinweise
-	* Das FOLIO-Reporting unterstützt LDP-basierte Abfragen sowohl auf
-	  PostgreSQL als auch auf Redshift, daher müssen die Abfragen auch auf 
-	  beiden laufen.
-	* Der SQL-Dialekt von Redshift basiert weitgehend auf einer alten Version 
-	  von PostgreSQL, aber es gibt Unterschiede. Das bedeutet, dass nicht alles, 
-	  was auf PostgreSQL läuft, auch auf Redshift läuft (und umgekehrt)
-* JSON-Funktionen
-	* PostgreSQL hat einen sehr viel besseren JSON-Support als Redshift.
-	  Redshift fast nur `json_extract_path_text()` verwenden
-	* [Redshift JSON functions]
-	  (https://docs.aws.amazon.com/redshift/latest/dg/json-functions.html)
-* Explizite Umwandlung
-	* Für alles in einer Abfrage, das nicht aus einer Datenbanktabelle stammt, 
-	  müssen der Wert ausdrücklich an einen Datentyp angegeben werden (oder 
-	  "umgewandelt"/"gecastet")
-		* Beispiel: Alles in der temporären Tabelle der Parameter benötigt 
-	  	  eine explizite Typumwandlung.
-		* Beispiel: Wenn ein ad-hoc-Feld mit einem statischen Wert in der 
-		  Tabelle eingefügt wird (siehe services-usage), muss der statische 
-		  Wert eine explizite Typumwandlung erhalten
-* Andere Probleme
-	* es gab Schwierigkeiten mit den date_part-Funktionen und die Redshift-
-	  Dokumentation war nicht hilfreich;  es hat eine Menge Ausprobieren 
-	  und Fehlerbehebung gekostet, um das richtige Muster herauszufinden (siehe
-	  services\_usage query)
-
-
+* General notes
+    * FOLIO Reporting supports queries on both PostgreSQL and Redshift, so the queries must also run on both.
+    * Redshift's dialect of SQL is largely based on an old version of PostgreSQL, but there are differences that mean that not everything that runs on PostgreSQL can run on Redshift (and vice versa).
+* JSON functions
+    * PostgreSQL has much better JSON support than Redshift. Redshift can pretty much only use `json_extract_path_text()` .
+    * [Redshift JSON functions](https://docs.aws.amazon.com/redshift/latest/dg/json-functions.html)
+* Explicit casting
+    * For anything in a query that doesn't come from a database table, you will need to explicitly state (or "cast") the value to a data type.
