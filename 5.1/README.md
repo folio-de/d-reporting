@@ -4,4 +4,4 @@ Hier ist die Zahl der Nutzenden anzugeben, für die ein Bibliothekskonto angeleg
 oder durch eine aktive Anmeldung angelegt wurde
 
 ## Hinweis
-Je nach lokaler Struktur sind einzelne Konten/Personengruppen auszuschließen die zu rein technischen Zwecken existieren.
+Je nach lokaler Struktur sind einzelne Konten/Personengruppen auszuschließen. Zum Beispiel, wenn diese zu rein technischen Zwecken existieren.
